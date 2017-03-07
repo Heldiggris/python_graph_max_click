@@ -5,7 +5,7 @@ import networkx.algorithms.clique as cl
 
 '''
 Программа принимает матрицу смежности, строит на её основе граф,
-находит максимальную клику, рисует граф, раскрашивая вершины, входящие в максимальную клику,
+находит максимальную клику, рисует граф, раскрашивая вершины и пути , входящие в максимальную клику,
 в зелёный цвет, а остальные в красный
 '''
 
@@ -30,9 +30,7 @@ def Graf_max_clique(graph):
     clique = [i for i in cl.find_cliques(graph)]
     max_len_clique = len(clique[0])
     for i in clique:
-        print(i)
         if(max_len_clique <= len(i)):
-            print(len(i))
             max_len_clique = len(i)
             clique_max = i
     return clique_max
@@ -46,11 +44,24 @@ if __name__ == '__main__':
         graph_matrix.append(a)
     graph = Graf_create(graph_matrix)
     clique_max = Graf_max_clique(graph)
-    color=[]
+    color_node=[]
+
     for i in range(len(a) * len(a) - 1):
         if i in clique_max:
-            color.append('g')
+            color_node.append('g')
         else:
-            color.append('r')
-    nx.draw_shell(graph, node_color=color,width=2, with_labels=True)
+            color_node.append('r')
+
+    edge_in_clique = []
+    color_edge = []
+    for i in clique_max:
+        for j in clique_max:
+            edge_in_clique.append((i, j))
+    for i,j in graph.edges_iter():
+        if(i,j) in edge_in_clique:
+            color_edge.append('g')
+        else:
+            color_edge.append('r')
+
+    nx.draw_shell(graph, node_color = color_node, width = 2, with_labels = True, edge_color = color_edge)
     pylab.show()
