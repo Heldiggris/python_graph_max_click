@@ -9,9 +9,23 @@ import networkx.algorithms.clique as cl
 в зелёный цвет, а остальные в красный
 '''
 
+class MatrixFormatError(Exception):
+    '''Ошибка отвечающая за правильное указание матрицы'''
+    def __str__(self, ex):
+        return 'Не верная матрица: {}'.format(ex)
+
+def check_matrix(matrix, lenght):
+    for i in range(lenght):
+        if(matrix[i][i] != 0):
+            raise MatrixFormatError('элементы не должны иметь пути от самих себя')
+    for i in range(lenght):
+        for j in range(lenght):
+            if(matrix[i][j] != matrix[j][i]):
+                raise MatrixFormatError('введен ориентированный граф')
+
 def Graf_create(matrix):
     '''
-    Принимет матрицу связности и на её основе строит матрицу,
+    Принимет матрицу связности и на её основе строит граф,
     возвращает построенный граф
     '''
     graph = nx.Graph()
@@ -42,16 +56,21 @@ if __name__ == '__main__':
     for i in range(len(a) - 1):
         a = list(map(int, input().split()))
         graph_matrix.append(a)
+
+    check_matrix(graph_matrix, len(a))
+
     graph = Graf_create(graph_matrix)
     clique_max = Graf_max_clique(graph)
-    color_node=[]
 
+    #задание цвета вершинам
+    color_node=[]
     for i in range(len(a) * len(a) - 1):
         if i in clique_max:
             color_node.append('g')
         else:
             color_node.append('r')
 
+    #задание цвета путям
     edge_in_clique = []
     color_edge = []
     for i in clique_max:
@@ -63,5 +82,11 @@ if __name__ == '__main__':
         else:
             color_edge.append('r')
 
-    nx.draw_shell(graph, node_color = color_node, width = 2, with_labels = True, edge_color = color_edge)
+    nx.draw_shell(
+                  graph,
+                  node_color = color_node,
+                  width = 2,
+                  with_labels = True,
+                  edge_color = color_edge
+                 )
     pylab.show()
