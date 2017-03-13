@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 import networkx.algorithms.clique as cl
 import sys
 import warnings
+from tkinter import *
+import math
 
 '''
 Программа принимает матрицу смежности, строит на её основе граф,
@@ -17,17 +19,18 @@ class MatrixFormatError(Exception):
     '''Ошибка, отвечающая за правильное указание матрицы'''
     pass
 
-def Matrix_check(matrix, lenght):
+def Matrix_check(matrix):
     #Не обязательное условие
     # for i in range(lenght):
     #     if(matrix[i][i] != 0):
     #         raise MatrixFormatError('элементы не должны иметь пути от самих себя')
     '''Проверяет матрицу на правильность '''
+    lenght = len(matrix[0])
     for i in range(lenght):
         for j in range(lenght):
             if(matrix[i][j] != matrix[j][i]):
                 raise MatrixFormatError
-            if(matrix[i][j] != 1 and matrix[i][j] != 0):
+            if(not (matrix[i][j] == 1 or matrix[i][j] == 0)):
                 raise MatrixFormatError
 
 def Graph_create(matrix):
@@ -56,29 +59,43 @@ def Graph_max_clique(graph):
             clique_max_all.append(i)
     return clique_max_all
 
+def chunks(lst, chunk_size):
+    return [lst[i:i+chunk_size] for i in range(0, len(lst), chunk_size)]
+
+
+def get_matrix():
+    global graph_matrix
+    graph_matrix = list(map(int, tex.get(1.0, END).split()))
+    if (math.sqrt(len(graph_matrix)).is_integer()):
+        graph_matrix = chunks(graph_matrix, int(math.sqrt(len(graph_matrix))))
+        try:
+            Matrix_check(graph_matrix)
+            root.destroy()
+        except:
+            pass
+
 if __name__ == '__main__':
     try:
         graph_matrix = []
-        a = list(map(int, input().split()))
-        graph_matrix.append(a)
-        for i in range(len(a) - 1):
-            a = list(map(int, input().split()))
-            graph_matrix.append(a)
-
-        Matrix_check(graph_matrix, len(a))
+        root=Tk()
+        root.geometry('450x450')
+        but=Button(root, text='Ok', command=get_matrix)
+        tex=Text(root,height=20,width=40, font="Arial 16")
+        tex.pack()
+        but.pack()
+        root.mainloop()
 
         graph = Graph_create(graph_matrix)
         clique_max_all = Graph_max_clique(graph)
         clique_max = clique_max_all[0]
-
+        lenght = len(graph_matrix[0])
         #задание цвета вершинам
         color_node=[]
-        for i in range(len(a) * len(a) - 1):
+        for i in range(lenght * lenght - 1):
             if i in clique_max:
                 color_node.append('g')
             else:
                 color_node.append('r')
-
         #задание цвета путям
         edge_in_clique = []
         color_edge = []
@@ -90,7 +107,6 @@ if __name__ == '__main__':
                 color_edge.append('g')
             else:
                 color_edge.append('r')
-
         plt.hold(False)
         nx.draw_shell(
                       graph,
@@ -107,15 +123,12 @@ if __name__ == '__main__':
             else:
                 clique_max_all_str += ', ' + str(i)
 
-        if(len(a) > 2):
+        if(lenght > 2):
             plt.text(-0.5, -1.1,'Максимальные клики: ' + clique_max_all_str)
         else:
             plt.text(-0.5, -0.01,'Максимальные клики: ' + clique_max_all_str)
         pylab.show()
 
-    except MatrixFormatError:
-        print('Ошибка: неправильно составлена матрица.')
-        sys.exit(1)
     except:
         print('Ошибка в программе.')
         sys.exit(2)
