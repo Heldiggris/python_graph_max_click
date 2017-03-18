@@ -1,3 +1,6 @@
+#! /home/login/anaconda3/bin/python
+
+
 import pylab
 from networkx import nx
 import matplotlib.pyplot as plt
@@ -60,19 +63,24 @@ def Graph_max_clique(graph):
     return clique_max_all
 
 def chunks(lst, chunk_size):
+    """Разделяет список на несколько подсписков"""
     return [lst[i:i+chunk_size] for i in range(0, len(lst), chunk_size)]
 
 
 def get_matrix():
+    """Получает матрицу введнную в графическом поле"""
     global graph_matrix
-    graph_matrix = list(map(int, tex.get(1.0, END).split()))
-    if (math.sqrt(len(graph_matrix)).is_integer()):
-        graph_matrix = chunks(graph_matrix, int(math.sqrt(len(graph_matrix))))
-        try:
-            Matrix_check(graph_matrix)
-            root.destroy()
-        except:
-            pass
+    try:
+        graph_matrix = list(map(int, tex.get(1.0, END).split()))
+        if (math.sqrt(len(graph_matrix)).is_integer()):
+            graph_matrix = chunks(graph_matrix, int(math.sqrt(len(graph_matrix))))
+            try:
+                Matrix_check(graph_matrix)
+                root.destroy()
+            except:
+                pass
+    except:
+        pass
 
 if __name__ == '__main__':
     try:
@@ -89,6 +97,7 @@ if __name__ == '__main__':
         clique_max_all = Graph_max_clique(graph)
         clique_max = clique_max_all[0]
         lenght = len(graph_matrix[0])
+
         #задание цвета вершинам
         color_node=[]
         for i in range(lenght * lenght - 1):
@@ -96,6 +105,7 @@ if __name__ == '__main__':
                 color_node.append('g')
             else:
                 color_node.append('r')
+
         #задание цвета путям
         edge_in_clique = []
         color_edge = []
@@ -107,6 +117,7 @@ if __name__ == '__main__':
                 color_edge.append('g')
             else:
                 color_edge.append('r')
+
         plt.hold(False)
         nx.draw_shell(
                       graph,
@@ -131,4 +142,4 @@ if __name__ == '__main__':
 
     except:
         print('Ошибка в программе.')
-        sys.exit(2)
+        sys.exit(1)
