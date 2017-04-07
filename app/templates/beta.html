@@ -7,6 +7,9 @@
 
         <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
         <script src="https://cdn.jsdelivr.net/lodash/4.17.4/lodash.min.js"></script>
+        <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="http://firstvector.org/examples/jTap/plugin/jquery.tap.js"></script>
+
         <script src="http://cytoscape.github.io/cytoscape.js/api/cytoscape.js-latest/cytoscape.min.js"></script>
         <script src="cytoscape-edge.js"></script>
 
@@ -96,29 +99,67 @@
                handleSize: 10,
                edgeType: function(){ return 'flat'; }
              });
-        var i = 0;
+    var i = 0;
+    var del_elem = [];
+    document.querySelector('#graph-clear').addEventListener('click', function(){
+        window.location.reload();
+    });
+    document.querySelector('#graph-info').addEventListener('click', function(){
+        alert("Левая кнопка мыши на пустом поле создаёт вершину\n\nЧтобы добавить ребро нужно провести его от красного кружка сверху от вершины\n\nПравая кнопка мыши по элементу удаляет его");
+    });
+    document.querySelector('#graph-center').addEventListener('click', function(){
+        cy.center();
+    });
+    document.querySelector('#graph-new').addEventListener('click', function(){
+        var index = 0;
+        if(del_elem.length == 0) {
+            i += 1;
+            index = i;
+        } else {
+            del_elem = del_elem.sort();
+            index = del_elem[0];
+            del_elem.splice(0,1);
+        }
+        cy.add([{
+            group : "nodes",
+            data : {
+                id : index
+            }
+        }]);
+    });
+
+
     cy.on('cxttap', 'node' ,function (evt) {
         cy.remove(cy.$("#" + evt.cyTarget.id()));
+        del_elem[del_elem.length] = evt.cyTarget.id();
     });
     cy.on('cxttap', 'edge' ,function (evt) {
         cy.remove(cy.$("#" + evt.cyTarget.id()));
     });
-        cy.on('tap', function (e) {
-            try{
-            e.cyTarget.id();
-        } catch(err) {
-      i += 1;
-cy.add([{
-    group : "nodes",
-    data : {
-        id : i
-    },
-    renderedPosition : {
-        x: event.pageX,
-        y: event.pageY
+    cy.on('tap', function (evt) {
+        try{
+        evt.cyTarget.id();
+    } catch(err) {
+        var index = 0;
+        if(del_elem.length == 0) {
+            i += 1;
+            index = i;
+        } else {
+            del_elem = del_elem.sort();
+            index = del_elem[0];
+            del_elem.splice(0,1);
+        }
+        cy.add([{
+            group : "nodes",
+            data : {
+                id : index
+            },
+            renderedPosition : {
+                x: event.pageX,
+                y: event.pageY
+            }
+        }]);
     }
-}]);
-}
     });
             });
         </script>
@@ -126,8 +167,17 @@ cy.add([{
 
     <body>
         <h1>Поиск максимальной клики</h1>
-
         <div id="cy"></div>
+        <div id="buttons">
+        <button style="background: #fdeaa8; width: 150px; height: 40px; 
+        border-radius: 5px; box-shadow: 0px 1px 3px; font-size: 14px;", id="graph-clear">Очистить поле</button>
+        <button style="background: #fdeaa8; width: 150px; height: 40px; 
+        border-radius: 5px; box-shadow: 0px 1px 3px; font-size: 14px;", id="graph-info">Показать подсказку</button>
+        <button style="background: #fdeaa8; width: 150px; height: 40px; 
+        border-radius: 5px; box-shadow: 0px 1px 3px; font-size: 14px;", id="graph-center">Центрировать</button>
+        <button style="background: #fdeaa8; width: 150px; height: 40px; 
+        border-radius: 5px; box-shadow: 0px 1px 3px; font-size: 14px;", id="graph-new">Создать вершину</button>
+        </div>
     </body>
 
 </html>
