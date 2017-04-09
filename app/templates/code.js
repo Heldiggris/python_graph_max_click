@@ -26,7 +26,6 @@ $(function(){
             'text-outline-color': 'black'
                             }
                         },
-                        // some style for the ext
                         {
                             selector: '.edgehandles-hover',
                             css: {
@@ -64,16 +63,8 @@ $(function(){
    handleSize: 10,
    edgeType: function(){ return 'flat'; }
  });
-
-
-
-
-
     var i = 0;
     var del_elem = [];
-
-
-
     cy.on('cxttap', 'node' ,function (evt) {
         cy.remove(cy.$("#" + evt.cyTarget.id()));
         del_elem[del_elem.length] = evt.cyTarget.id();
@@ -105,19 +96,9 @@ $(function(){
 
             }]);
     });
-
-
-
-
-  // var params = {};
   var $config = $('#config');
   var $btnParam = $('<div class="param"></div>');
   $config.append( $btnParam );
-
-
-
-
-
   var buttons = [
     {
       label: '<i class="fa fa-eye"></i>',
