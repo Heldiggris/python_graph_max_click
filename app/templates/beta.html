@@ -1,11 +1,25 @@
 <!DOCTYPE html>
-
 <html>
+<head>
+<meta charset=utf-8 />
+<meta name="viewport" content="user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, minimal-ui">
+<title>Графы - максимальная клика</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/4.10.3/css/bootstrap-slider.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+<link href="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.css" rel="stylesheet" type="text/css" />
+<link href="style.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.0/lodash.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/4.10.3/bootstrap-slider.min.js"></script>
+    <script src="http://marvl.infotech.monash.edu/webcola/cola.v3.min.js"></script>
 
-    <head>
-        <title>Графы</title>
-
-        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js"></script>
+    <script src="https://cdn.rawgit.com/cytoscape/cytoscape.js-qtip/2.2.5/cytoscape-qtip.js"></script>
+    <script src="https://cdn.rawgit.com/cytoscape/cytoscape.js-cola/1.1.1/cytoscape-cola.js"></script>
         <script src="https://cdn.jsdelivr.net/lodash/4.17.4/lodash.min.js"></script>
         <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
     <script src="http://firstvector.org/examples/jTap/plugin/jquery.tap.js"></script>
@@ -13,171 +27,22 @@
         <script src="http://cytoscape.github.io/cytoscape.js/api/cytoscape.js-latest/cytoscape.min.js"></script>
         <script src="cytoscape-edge.js"></script>
 
-        <style>
-            body {
-                font-family: helvetica;
-                font-size: 14px;
-            }
-            #cy {
-                width: 100%;
-                height: 100%;
-                position: absolute;
-                left: 0;
-                top: 0;
-                z-index: 999;
-            }
-            h1 {
-                opacity: 0.5;
-                font-size: 1em;
-            }
-            #buttons {
-                position: absolute;
-                right: 0;
-                bottom: 0;
-                z-index: 99999;
-            }
-        </style>
 
-        <script>
-            window.addEventListener("load", function(){
-                var cy = window.cy = cytoscape({
-                    container: document.getElementById('cy'),
-                    ready: function(){
-                    },
-                    layout: {
-                        name: 'grid',
-                        rows: 2,
-                        cols: 2
-                    },
-                    style: [
-                        {
-                            selector: 'node',
-              style: {
-                shape: 'round',
-                'background-color': '#808000',
-                label: 'data(id)',
-                'text-valign': 'center',
-            'color': 'white',
-            'text-outline-width': 1,
-            'text-outline-color': 'black'
-                            }
-                        },
-                        // some style for the ext
-                        {
-                            selector: '.edgehandles-hover',
-                            css: {
-                                'background-color': 'red'
-                            }
-                        },
-                        {
-                            selector: '.edgehandles-source',
-                            css: {
-                                'border-width': 2,
-                                'border-color': 'red'
-                            }
-                        },
-                        {
-                            selector: '.edgehandles-target',
-                            css: {
-                                'border-width': 2,
-                                'border-color': 'red'
-                            }
-                        },
-                        {
-                            selector: '.edgehandles-preview, .edgehandles-ghost-edge',
-                            css: {
-                                'line-color': 'red',
-                                'target-arrow-color': 'red',
-                                'source-arrow-color': 'red'
-                            }
-                        }
-                    ]
-                });
-                cy.edgehandles({
-               toggleOffOnLeave: true,
-               handleNodes: "node",
-               handleSize: 10,
-               edgeType: function(){ return 'flat'; }
-             });
-    var i = 0;
-    var del_elem = [];
-    document.querySelector('#graph-clear').addEventListener('click', function(){
-        window.location.reload();
-    });
-    document.querySelector('#graph-info').addEventListener('click', function(){
-        alert("Левая кнопка мыши на пустом поле создаёт вершину\n\nЧтобы добавить ребро нужно провести его от красного кружка сверху от вершины\n\nПравая кнопка мыши по элементу удаляет его");
-    });
-    document.querySelector('#graph-center').addEventListener('click', function(){
-        cy.center();
-    });
-    document.querySelector('#graph-new').addEventListener('click', function(){
-        var index = 0;
-        if(del_elem.length == 0) {
-            i += 1;
-            index = i;
-        } else {
-            del_elem = del_elem.sort();
-            index = del_elem[0];
-            del_elem.splice(0,1);
-        }
-        cy.add([{
-            group : "nodes",
-            data : {
-                id : index
-            }
-        }]);
-    });
+<script src="file:///home/login/python_graph_max_click/app/templates/code.js"></script>
+</head>
+<body>
+<div id="cy", class = "cytosc"></div>
+<span class="fa fa-bars config-toggle" id="config-toggle"></span>
+<div id="config" class="config">
+<div class="preamble">
+<span class="label label-info">Информационная панель</span>
 
+<p>Левая кнопка мыши на пустом поле создаёт вершину</p>
 
-    cy.on('cxttap', 'node' ,function (evt) {
-        cy.remove(cy.$("#" + evt.cyTarget.id()));
-        del_elem[del_elem.length] = evt.cyTarget.id();
-    });
-    cy.on('cxttap', 'edge' ,function (evt) {
-        cy.remove(cy.$("#" + evt.cyTarget.id()));
-    });
-    cy.on('tap', function (evt) {
-        try{
-        evt.cyTarget.id();
-    } catch(err) {
-        var index = 0;
-        if(del_elem.length == 0) {
-            i += 1;
-            index = i;
-        } else {
-            del_elem = del_elem.sort();
-            index = del_elem[0];
-            del_elem.splice(0,1);
-        }
-        cy.add([{
-            group : "nodes",
-            data : {
-                id : index
-            },
-            renderedPosition : {
-                x: event.pageX,
-                y: event.pageY
-            }
-        }]);
-    }
-    });
-            });
-        </script>
-    </head>
+<p>Чтобы добавить ребро нужно провести его от красного кружка сверху от вершины</p>
 
-    <body>
-        <h1>Поиск максимальной клики</h1>
-        <div id="cy"></div>
-        <div id="buttons">
-        <button style="background: #fdeaa8; width: 150px; height: 40px; 
-        border-radius: 5px; box-shadow: 0px 1px 3px; font-size: 14px;", id="graph-clear">Очистить поле</button>
-        <button style="background: #fdeaa8; width: 150px; height: 40px; 
-        border-radius: 5px; box-shadow: 0px 1px 3px; font-size: 14px;", id="graph-info">Показать подсказку</button>
-        <button style="background: #fdeaa8; width: 150px; height: 40px; 
-        border-radius: 5px; box-shadow: 0px 1px 3px; font-size: 14px;", id="graph-center">Центрировать</button>
-        <button style="background: #fdeaa8; width: 150px; height: 40px; 
-        border-radius: 5px; box-shadow: 0px 1px 3px; font-size: 14px;", id="graph-new">Создать вершину</button>
-        </div>
-    </body>
-
+<p>Правая кнопка мыши по элементу удаляет его</p>
+</div>
+</div>
+</body>
 </html>
