@@ -1,6 +1,5 @@
-
-
 var cy;
+
 
 $(function(){
 
