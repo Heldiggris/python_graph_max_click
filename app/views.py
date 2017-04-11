@@ -51,6 +51,9 @@ def find():
     except:
         pass
     if request.method == "POST":
-        return json.dumps(Graph_max_clique(graph))
+        try:
+            return json.dumps(Graph_max_clique(graph))
+        except:
+            return 
     else:
         return -1

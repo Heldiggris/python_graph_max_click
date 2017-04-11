@@ -18,8 +18,8 @@ $(function(){
                             selector: 'node',
               style: {
                 shape: 'round',
-                'height': 80,
-        'width': 80,
+                'height': 50,
+        'width': 50,
         'background-fit': 'cover',
         'border-color': '#000',
         'border-width': 3,
@@ -148,6 +148,13 @@ $(function(){
                             css: {
                                 'background-image': 'https://farm8.staticflickr.com/7272/7633179468_3e19e45a0c_b.jpg',
                             }
+                        },
+                        {
+                            selector: '.edge-clique',
+                            css: {
+                                'line-color': 'black',
+                                'width' : 5
+                            }
                         }
                     ]
   });
@@ -210,6 +217,7 @@ cy.$('#'+index).classes(color_node[Math.floor(Math.random() * (13 - 0 + 1)) + 0]
   ];
 buttons.forEach( makeButton );
 var prev_clique = [];
+var prev_clique_edges = [];
 var ind = 0;
 function makeButton( opts ){
     var $button = $('<button class="btn btn-default",id="' + opts.id + '">'+ opts.label +'</button>');
@@ -225,6 +233,7 @@ function makeButton( opts ){
         i = 0;
         del_elem = [];
   } else if(opts.id =='button_result') {
+    try{
         $.ajax({
             type: "POST",
             url: '_find',
@@ -232,15 +241,28 @@ function makeButton( opts ){
             contentType: 'application/json;charset=UTF-8',
             success: function(msg){
                 var clique = $.parseJSON(msg);
-                var len_cl = prev_clique.length;
-                for(var i = 0; i < len_cl; i++) {
+                for(var i = 0; i < prev_clique.length; i++) {
                     cy.$('#'+prev_clique[i]).classes(color_node[Math.floor(Math.random() * (13 - 0 + 1)) + 0]);
                 }
-                prev_clique.splice(0, len_cl);
+                for(var i = 0; i < prev_clique_edges.length; i++) {
+                    cy.$('#'+prev_clique_edges[i]).classes("node");
+                }
+                prev_clique = [];
+                prev_clique_edges = [];
                 try {
                     clique[ind].forEach(function(a) {
                         cy.$('#'+a).classes('bird');
                         prev_clique[prev_clique.length] = a;
+                    });
+                    clique[ind].forEach(function(a) {
+                        clique[ind].forEach(function(b) {
+                            try{
+                                cy.edges("[source = '" + a+ "'][target = '"+b+"']").forEach(function( ele ){
+                                    prev_clique_edges[prev_clique_edges.length] = ele.id();
+                                    cy.$('#'+ ele.id()).classes("edge-clique");
+                            });
+                        }catch(err) {}
+                        });
                     });
                     ind += 1;
                 } catch(err) {
@@ -249,10 +271,21 @@ function makeButton( opts ){
                         cy.$('#'+a).classes('bird');
                         prev_clique[prev_clique.length] = a;
                     });
+                    clique[ind].forEach(function(a) {
+                        clique[ind].forEach(function(b) {
+                            try{
+                                cy.edges("[source = '" + a+ "'][target = '"+b+"']").forEach(function( ele ){
+                                    prev_clique_edges[prev_clique_edges.length] = ele.id();
+                                    cy.$('#'+ ele.id()).classes("edge-clique");
+                            });
+                        }catch(err) {}
+                        });
+                    });
                     ind += 1;
                 }
             }
         });
+    } catch(err) {}
   }
 
       if( opts.fn ){ opts.fn(); }
