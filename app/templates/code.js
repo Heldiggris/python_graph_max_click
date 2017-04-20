@@ -168,11 +168,11 @@ $(function(){
     var i = 0;
     var del_elem = [];
     cy.on('cxttap', 'node' ,function (evt) {
-        cy.remove(cy.$("#" + evt.cyTarget.id()));
-        del_elem[del_elem.length] = evt.cyTarget.id();
+        cy.remove(cy.$("#" + this.id()));
+        del_elem[del_elem.length] = this.id();
     });
     cy.on('cxttap', 'edge' ,function (evt) {
-        cy.remove(cy.$("#" + evt.cyTarget.id()));
+        cy.remove(cy.$("#" + this.id()));
     });
     var color_node = ['_808080', '_C0C0C0', '_FF00FF', '_800080', '_FF0000', '_800000', '_FFFF00', '_808000', '_00FF00', '_008000', '_00FFFF', '_008080', '_0000FF', '_000080'];
     $('.cytosc').on('tap', '*',function(e) {
